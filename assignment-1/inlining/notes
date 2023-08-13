@@ -1,0 +1,5 @@
+
+Same_file        avg: 0.000514s 
+Different_file   avg: 0.000467s  (and the executable is larger)
+Inlined_manually avg: 0.000508s
+

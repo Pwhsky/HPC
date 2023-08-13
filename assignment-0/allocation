@@ -1,0 +1,2 @@
+Contiguous malloc essentially allocates a "matrix" of memory, such that the memory adresses are next to each other and are faster to access.
+
