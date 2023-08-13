@@ -38,3 +38,6 @@ int main(){
 
    return 0;
 }
+
+//Note: https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html for a list of all optimization features.
+// -Os optimizes for size, -Og optimizes debugging experience

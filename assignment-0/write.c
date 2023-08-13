@@ -9,7 +9,7 @@ int main() {
 	for (int ix = 0; ix<size; ix++){
 		for (int jx = 0; jx<size;jx++){
 			int entry = ix*jx;
-			fprintf(file, "%d, " ,entry);
+			fprintf(file, "%d " ,entry);
 		
 		}	
 		fprintf(file, "\n");

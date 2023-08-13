@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 int main () {
+
 	FILE *file;
 	file = fopen("/home/alex/Desktop/HPC/assignment-0/matrix.txt","r");
 	int size= sizeof(*file);
@@ -12,29 +13,23 @@ int main () {
 	}
 	
 
-         int value;
-    int counter = 0;
 
-    while (fscanf(file, "%d,", &value) != EOF) {
-        if (value >= 0 && value < 10) {
-            printf("%d ", value);
-        } else {
-            printf("%d ", value);
-        }
-
-        counter++;
-        if (counter == 10) {
-            printf("\n");
-            counter = 0;
-        }
-    }
-    
-    
-    
-    
-
-
+    //Parse contents of file:
 	
+	int number;
+	int row = 0;
+	int col = 0;
+	
+	while (fscanf(file, "%d", &number) == 1){
+		if (number == col*row){
+			printf("true\n");
+		}
+		col++;
+		if (col % 10 == 0) {
+			row++;
+			col = 0;
+		}	
+	}
 	fclose(file);
 	
 	return 0;
