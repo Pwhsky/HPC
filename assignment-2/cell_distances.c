@@ -16,31 +16,39 @@
 
 const int nDistances = 3465;
 static size_t count[3465]; //The number of unique distances
-const int blockSize = 425;
+const size_t maxChunkSize = 425;
 
-static inline void getDistances(float xVal,float yVal, float zVal, float *x, float* y, float* z){
+
+static inline void getLocalDistances(size_t blockSize, float**chunk ){
     extern  size_t count[];
-    float innerProduct;
-    int   distance;
-    
-	for(int  i = 0; i<(blockSize);i++){
-	            innerProduct = sqrtf((xVal-x[i])*(xVal-x[i]) +
-	            			 (yVal-y[i])*(yVal-y[i]) +
-	            			 (zVal-z[i])*(zVal-z[i]));
-	        
-	            distance = (int)(100*sqrtf(innerProduct));
-	            count[distance] += 1;
-        //add innerproduct to list of distances
+    float  distance,x,y,z;
+    size_t i,j;
+	#pragma omp parallel for shared(chunk,pointIndex) private(i,j,distance,x,y,z) reduction(+:count)
+	for(i = 0; i<blockSize-1;i++){
+		x = chunk[i][0];
+		y = chunk[i][1];
+		z = chunk[i][2];
+		for(j = i + 1; j<blockSize; j++){
+		
+		distance = sqrtf((x-chunk[j][0])*(x-chunk[j][0])+
+				 (y-chunk[j][1])*(y-chunk[j][1])+
+				 (z-chunk[j][2])*(z-chunk[j][2]));
+				 
+		//truncate by casting to int.
+	        count[(int)(100*distance)] += 1;
+		}
 	    	
 	}
-
 }
+
+
+
 
 
 
 int main (int argc, char** argv) {
 clock_t begin = clock();
-
+extern  size_t count[];
 
 //parse arguments
 	size_t threads = 2;
@@ -56,8 +64,7 @@ clock_t begin = clock();
 
    		 }	
   	}
-
-	
+	omp_set_num_threads(threads);
 
 //open file:
 		//char cwd[PATH_MAX];
@@ -65,63 +72,174 @@ clock_t begin = clock();
 		//getcwd(cwd,sizeof(cwd));
 		//strcat(cwd,filename);
 		
-		FILE *file = fopen("cells","r");
-		if (file == NULL){
-			printf("Error: failed to open file \n");
-			return 1;
-		}
+	FILE *file = fopen("cells","r");
+	if (file == NULL){
+		printf("Error: failed to open file \n");
+		return 1;
+	}
 		
-//24 characters per row (including \n), compute how many rows.
+	 //24 characters per row (including \n), compute how many rows.
 
-		 fseek(file, 0L, SEEK_END);
-    	         long int  nChars = ftell(file); 
-  		 int    nRows   = nChars/24; 
-		 rewind(file);
+	fseek(file, 0L, SEEK_END);
+    	long int nChars  = ftell(file); 
+    	rewind(file);
+    	size_t nRows   = nChars/24; 
+    	const size_t maxRows = 100000;
+  	
+	size_t nChunks; //number of total chunks to be processed
+	size_t maxRowsPerChunk = nRows;	
+	if(nRows % 100000){
+		nChunks = nRows/maxRows +1;
+	}else{
+		nChunks = nRows/maxRows;
+	}
+
 	
-		int maxChunkSize = 425;      
-		int nChunks 	 = nRows/(maxChunkSize)+1; //number of chunks per thread
+	size_t nRowsPerChunk[nChunks]; //CONTINUE FROM HERE, WIP
+	
+	size_t firstChunk[nChunkS]; 
+	
+	for(size_t i = 0; i < nChunks; ++i){
+       		if(maxRowsPerChunk >= maxRows){
+            		nRowsPerChunk[i] = maxRows;
+            		maxRowsPerChunk -= maxRows;
+      		}else{
+           		nRowsPerChunk[i] = maxRowsPerChunk;
+       		}
+       		firstBlock[i] = i * maximumRowsLoad;
+   	}
+	
+	for(size_t i = 0; i< nChunks; i++){
+		//Allocate entries
+		size_t chunkIndex = nRowsPerChunk[i];
+		
+		float** chunk     =  (float**)malloc(sizeof(float*) * chunkIndex)
 		
 		
-		//THREAD INSTRUCTION:////////////////////
-		float i,j,k; 
-		float xVal,yVal,zVal;
+	
+	
+	
+	}
+	
+	
+	
 		
-		int index;
-		float *x = (float*)malloc(sizeof(float)*maxChunkSize);
-		float *y = (float*)malloc(sizeof(float)*maxChunkSize);
-		float *z = (float*)malloc(sizeof(float)*maxChunkSize);
+	float ** pointsToCompare = (float**) malloc(sizeof(float*)*maxChunkSize);
+	#pragma omp parallel for private(ix) shared(pointsToCompare)
+	for(size_t ix = 0; ix < maxChunkSize; ix++) {
+		pointsToCompare[ix] = (float*)malloc(sizeof(float)*3); //3 float coordinates per entry
+	}
+		
+	float ** comparisonPoints = (float**) malloc(sizeof(float*)*maxChunkSize);
+	#pragma omp parallel for private(ix) shared(comparisonPoints)
+	for(size_t ix = 0; ix < maxChunkSize; ix++) {
+		comparisonPoints[ix] = (float*)malloc(sizeof(float)*3); //3 float coordinates per entry
+	}
+		
+		
+		//Load a chunk of points to process:
 
-		for (int point = 0; point < nRows; point++) {
+	int distance;
+      	float product;
+      	float xPrim,yPrim,zPrim;
+      	size_t point;
+      	char stringLine[25]; 
+      	#pragma omp parallel for private(point) reduction(+:count)
+	for (point = 0; point < nChunks; point++) {
+	
+		
+		fseek(file, point*maxChunkSize*24L, SEEK_SET);
+    		
+      		
+        	#pragma omp parallel for private(ix, stringLine) shared(pointsToCompare)
+       		for(ix = 0; ix < maxChunkSize; ++ix){
+           		fgets(stringLine, 25, file);
+           		pointsToCompare[ix][0] = atof(stringLine);
+          		pointsToCompare[ix][1] = atof(stringLine + 8);
+          		pointsToCompare[ix][2] = atof(stringLine + 16);
+      		}
+      		
+      		
+      		//for point = 0...n
+      		
+      		//Process the chunk by first populating a comparisonPoints :
+      		fseek(file, (point)*maxChunkSize*24L, SEEK_SET);
+      		
+      		  #pragma omp parallel for private(ix, stringLine) shared(comparisonPoints)
+      		for (ix = 0 ; ix < maxChunkSize; ix++) {
+           		fgets(stringLine, 25, file);
+           		comparisonPoints[ix][0] = atof(stringLine);
+          		comparisonPoints[ix][1] = atof(stringLine + 8);
+          		comparisonPoints[ix][2] = atof(stringLine + 16);
+			
+      		}
+      	
+      	
+      		for (ix = 0; ix < maxChunkSize; ix++){
+      			//Get point:
+      			float x = pointsToCompare[ix][0];
+      			float y = pointsToCompare[ix][1];
+      			float z = pointsToCompare[ix][2];
+      			
+      			//iterate through the chunk with the given point and compute euclidean distance
+      			
+      			for (size_t i = 0; i<maxChunkSize;i++){
+      				xPrim = comparisonPoints[i][0];
+      				yPrim = comparisonPoints[i][1];
+      				zPrim = comparisonPoints[i][2];
+      			
+      				product = sqrtf((x-xPrim)*(x-xPrim) +
+	            				(y-yPrim)*(y-yPrim) +
+	            				(z-zPrim)*(z-zPrim));
+	            				 
+	  			 distance = (int)(100*product);
+	  			
+	          		 count[distance] += 1;
+      			  
+      			}
+      		
+      		}
+      	}
+      		
+      	
+
+       		
+      		 
+      		
+      		
+        
+			
+			
+		
+		
+	
+	
+
+		/*for (long int point = 0; point < nRows; point++) {
 			//Get point in list to compute distances from
 			
-    			 if (fscanf(file, "%f %f %f", &xVal, &yVal, &zVal) != 3) {
-  				return 1;
-			  }
-			omp_set_num_threads(threads);
-  		#pragma omp parallel for 
-  		
-      			for (int iChunk = 0; iChunk < nChunks; iChunk++){
+			fseek(file,  (24)*point ,SEEK_SET );	
+    			fscanf(file, "%f %f %f", &xVal, &yVal, &zVal); // this is slow because of file reading
+    			
+    			
+    			#pragma omp parallel for shared(iChunk,point)
+      			for (iChunk = 0; iChunk < nChunks; iChunk++){
+      				long int offset = (point+1)*24*iChunk*maxChunkSize;
 				//Iterate through chunks using xVal yVal zVal as point of comparison,
 				//No more than 425 floats per array!
-				
 				//place pointer at correct position in the list based on the chunk
-				
-				fseek(file, ( point*nChunks + iChunk)*3*sizeof(float)*maxChunkSize,SEEK_SET );
-			
+				fseek(file,offset,SEEK_SET );
 				for (int i = 0; i < maxChunkSize; i++) {
             				fscanf(file, "%f %f %f", &x[i], &y[i], &z[i]);
            			}
-				
+           			
        				getDistances(xVal, yVal, zVal, x, y, z);
-       			}
-       		
+       				
+       			}      			
        			
-       			 
-			//Move filepointer to the next point to compare (fscanf moves it forward)
-			fseek(file,  3 * (sizeof(float) + 1)*point ,SEEK_SET );
-			
-		}
-
+			//Move filepointer back (fscanf moves it forward)
+			fseek(file,  (24 + 1)*point ,SEEK_SET );
+		}*/
 
 		
 		
@@ -130,9 +248,7 @@ clock_t begin = clock();
 			
 			//dataset needs to be loaded in blocks starting at the second row, then 3th etc 
 
-		free(x);
-		free(y);
-		free(z);
+
 		////////////////////////////////////////
 		
 		
@@ -142,11 +258,11 @@ clock_t begin = clock();
     //Print results:
     for(size_t i = 0; i<nDistances; i++){
     
-    	printf("%05.2f %ld\n", (double)i/100,count[i]);
+      printf("%05.2f %ld\n", (double)i/100,count[i]);
     }
 
 	clock_t end = clock();
-   	double elapsed_time = (double)(end - begin) / CLOCKS_PER_SEC;
+   	double elapsed_time = (double)(end - begin) / (CLOCKS_PER_SEC*threads);
 	
 	printf("Elapsed time: %lf \n",elapsed_time);
 	return 0;
