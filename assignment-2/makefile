@@ -1,13 +1,19 @@
 CC = gcc
 SRC = cell_distances.c
 OUTPUT = main
-OPT = -Ofast
+OPT = -O2
 LIBS = -lm
-OBJ = cell_distances.o
+
+.PHONY: all
 
 cell_distances: $(OBJ)
-	$(CC) -o $(OUTPUT) $(OBJ) $(OPT) $(LIBS)
+	$(CC) $(SRC) -o $(OUTPUT) -fopenmp $(OPT) $(LIBS) -march=native
+	
+test : cell_distances.c makefile
+	tar -czvf cell_distances.tar.gz cell_distances.c makefile
+	echo "built archive...\n\n"
+	./check_submission.py cell_distances.tar.gz
 	
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJ) && rm -f $(OUTPUT)
 
