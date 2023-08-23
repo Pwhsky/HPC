@@ -1,4 +1,6 @@
--O0 	   = 0.013842 per iteration
--O1  	   = 0.005079 per iteration
--O2  	   = 0.005611 per iteration
--O2 native = 0.004813 per iteration  
+		Row, column
+-O0 	        = 0.003251, 0.003496 per iteration
+-O2  	        = 0.001570, 0.002825 per iteration
+-O2 native = 0.001527, 0.002275 per iteration
+
+
