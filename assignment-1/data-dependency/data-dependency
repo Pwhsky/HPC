@@ -1,0 +1,19 @@
+unrolled 0:
+O0		0.00327s
+O2		0.001363s
+O2 native	0.001409s
+
+unrolled 2:
+O0		0.001849s
+O2		0.000951s
+O2 native	0.001013s
+
+unrolled 4: 
+O0  	       0.001874s
+O2	       0.000491s
+O2 native 0.000694s
+
+unrolled 8:
+O0		0.001661s
+O2		0.000618s
+O2 native	0.000629s

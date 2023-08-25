@@ -1,0 +1,14 @@
+jump:
+O0		0.055678
+O2		0.043035
+O2 native	0.044708s
+
+linear:
+O0		0.0012819s
+O2		0.0005390s
+O2 native	0.0005416s
+
+altlinear:
+O0		0.000021s
+O2		0.000013s
+O2 native	0.000011
