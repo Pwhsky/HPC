@@ -43,9 +43,8 @@ static inline void getGlobalDistances(const size_t chunkSize, float** chunk, con
 	#pragma omp parallel for private(i,distance) shared(chunk,chunkSize, prevChunkEntries) reduction(+:count)
 	for(i=0; i<chunkSize; i++){
 		 distance =  sqrtf((prevChunkEntries[0] - chunk[i][0])* (prevChunkEntries[0] - chunk[i][0]) +
-		 			  (prevChunkEntries[1] - chunk[i][1])* (prevChunkEntries[1] - chunk[i][1]) + 
-		 			  (prevChunkEntries[2] - chunk[i][2])* (prevChunkEntries[2] - chunk[i][2])
-		 			 );
+		 			   (prevChunkEntries[1] - chunk[i][1])* (prevChunkEntries[1] - chunk[i][1]) + 
+		 			   (prevChunkEntries[2] - chunk[i][2])* (prevChunkEntries[2] - chunk[i][2]));
 		count[(int)(distance)*100] +=1;
 	}
 }
