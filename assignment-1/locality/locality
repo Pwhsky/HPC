@@ -3,4 +3,5 @@
 -O2  	        = 0.001570, 0.002825 per iteration
 -O2 native = 0.001527, 0.002275 per iteration
 
-
+Why are row sums faster?
+The memory adresses to perform a row sum is closer to each other and does not require large jumps in memory.

@@ -10,8 +10,7 @@ int main(int argc, char** argv) {
 	char char1 = arg1[1];
 	char char2 = arg2[1];
 	
-	printf("%c",arg1);
-	printf("%c",arg2);
+
 	if (char1 == 'a' && char2 == 'b')  {
 		printf("A is %c and B is %c \n",arg1[2],arg2[2]);
 		

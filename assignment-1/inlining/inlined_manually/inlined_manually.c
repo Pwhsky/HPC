@@ -27,11 +27,10 @@ int main (){
 			
 		for (int ix = 0; ix<size; ix++) {
 			as_re[ix] = bs_re[ix] *  cs_re[ix] - bs_im[ix] * cs_im[ix]; //unsure if this is correct
-			
 			as_im[ix] = bs_re[ix] *  cs_im[ix] + bs_im[ix] * cs_re[ix];
 		}	
 		
-		//printf("%f\n",as_im[3]);
+		printf("%f\n",as_im[rand()%1000]);
 		free(as_re);
    		free(as_im);
    		free(bs_re);
