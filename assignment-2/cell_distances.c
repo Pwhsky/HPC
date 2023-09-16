@@ -72,7 +72,6 @@ static inline float** makeNewChunk(const size_t chunkSize ){
 
 int main (int argc, char** argv) {
 
-clock_t begin = clock();
 extern  size_t count[];
 
 //parse arguments
@@ -191,11 +190,6 @@ extern  size_t count[];
     
       printf("%05.2f %ld\n", (double)i/100,count[i]);
     }
-
-	clock_t end = clock();
-   	double elapsed_time = (double)(end - begin) / (CLOCKS_PER_SEC*threads);
-	
-	printf("Elapsed time: %lf \n",elapsed_time);
 
 	
 	return 0;

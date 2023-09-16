@@ -1,0 +1,9 @@
+
+Assuming you are standing in your directory containing your source code and makefile:
+
+Create tar file: (basicly zip)
+$ tar czf a2.tar.gz cell_distances.c makefile
+
+Run the check submission script on your tar file:
+$ /home/hpc2023/cell_distances/check_submission.jl a2.tar.gz
+
