@@ -18,12 +18,12 @@ Discuss the timing results and speculate about the possible cause.
 
 
 int main(){
-   int size = 100000000;
-   long long sum = 0;
+   int size = 1000000;
+   double sum = 0;
 
    clock_t start_loop = clock();
    
-   for (size_t i = 0; i < size+1; i++) {
+   for (float i = 0; i < size+3; i++) {
          	 sum += i;	
    }
    
@@ -32,7 +32,7 @@ int main(){
    double total_time = (double)(end_loop-start_loop)/CLOCKS_PER_SEC;
    double time_per_loop = total_time/(double)size;
    
-   printf("Total sum = %lld\n",sum);
+   printf("Total sum = %f\n",sum);
    printf("Total time = %.13f seconds\n",total_time);
    printf("Time per iteration = %.13f seconds \n", time_per_loop);
 

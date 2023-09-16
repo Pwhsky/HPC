@@ -16,16 +16,13 @@ void row_sums(double * sums, const double ** matrix, size_t nrs, size_t ncs)
 
 void col_sums(double * sums, const double ** matrix, size_t nrs, size_t ncs)
 {
-  for ( size_t ix = 0; ix < nrs; ++ix ) { //Loop unrolling
-    double sum0 = 0, sum1 = 0, sum2 = 0, sum3 = 0;
-    for ( size_t jx = 0; jx < ncs; jx += 4 )
+  for ( size_t ix = 0; ix < nrs; ++ix ) {
+    double sum = 0.;
+    for ( size_t jx = 0; jx < ncs; jx ++ )
     {
-      sum0 += matrix[jx][ix];
-      sum1 += matrix[jx+1][ix];
-      sum2 += matrix[jx+2][ix];
-      sum3 += matrix[jx+3][ix];
+      sum += matrix[jx][ix]
     }
-    sums[ix] = sum0 + sum1 + sum2 + sum3;
+    sums[ix] = sum;
   }
 }
 
@@ -49,9 +46,8 @@ int main()
   }
   
   clock_t begin = clock();
-  for (int i = 0; i < iter; ++i)
-  {
-    row_sums(sums, (const double**)matrix, SIZE,SIZE);
+  for (int i = 0; i < iter; ++i){
+  	row_sums(sums, (const double**)matrix, SIZE,SIZE);
   }
   clock_t end = clock();
 
