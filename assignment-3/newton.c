@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 double lines;
 int threads;
 int degree;
@@ -38,6 +39,8 @@ static inline void checkAttractor(complex double *z){
                 }
         }    
 }
+
+
 
 static inline void newtonRhapson(){
         for(int ix = 0, offsetRe = 0; ix < lines; ix+=1,offsetRe += 4){ 

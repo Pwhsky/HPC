@@ -42,7 +42,7 @@ int main (){
 			mul_cpx(&as_re[ix], &as_im[ix], &bs_re[ix], &cs_re[ix],&bs_im[ix],&cs_im[ix]); 
 		}	
 		
-		//printf("%f\n",as_im[3]);
+		printf("%f\n",as_im[rand()%1000]);
 		free(as_re);
    		free(as_im);
    		free(bs_re);

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-void mul_cpx(
+ void mul_cpx(
     double *a_re,
     double *a_im,
     double *b_re,
@@ -39,17 +39,18 @@ int main (){
 			mul_cpx(&as_re[ix], &as_im[ix], &bs_re[ix], &cs_re[ix],&bs_im[ix],&cs_im[ix]); 
 		}	
 
-   		clock_t end = clock();
-		average_time += (double)(end - begin) / CLOCKS_PER_SEC;
-
+   		
+		   printf("%f\n",as_im[rand()%1000]);
    		free(as_re);
    		free(as_im);
    		free(bs_re);
    		free(bs_im);
    		free(cs_re);
    		free(cs_im);
+   		clock_t end = clock();
+		average_time += (double)(end - begin) / CLOCKS_PER_SEC;
    	}
-   //	printf("%f\n",as_im[3]);
+  
 
    	
    	average_time = average_time/iLimit;
