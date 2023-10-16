@@ -1,0 +1,2 @@
+$ tar czf a3.tar.gz newton.c makefile
+$ /home/hpc2023/newton_iteration/check_submission.jl a3.tar.gz

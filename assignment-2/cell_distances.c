@@ -24,7 +24,7 @@ static inline void getLocalDistances(size_t chunkSize,float**chunk ){
     extern  size_t count[];
     float  distance,x,y,z;
     size_t i,j;
-	#pragma omp parallel for shared(chunk,chunkSize)  private(i,j,distance,x,y,z) reduction(+:count)
+	#pragma omp parallel for shared(chunk,chunkSize)  private(i,j,distance,x,y,z) reduction(+:count) 
 	for(i = 0; i<chunkSize-1;i++){
 		x = chunk[i][0];
 		y = chunk[i][1];
@@ -78,7 +78,7 @@ extern  size_t count[];
 	size_t threads = 2;
 	char arg[10];
 	for (size_t i = 1; i < argc; i++) {
-		if (argv[i][0] == '-') {
+		if (argv[i] == '-') {
     	  		memset(arg, 0, sizeof(arg));
      		 	memcpy(arg, &argv[i][2], strlen(argv[i]) - 2);
      		 	
@@ -96,7 +96,7 @@ extern  size_t count[];
 		//getcwd(cwd,sizeof(cwd));
 		//strcat(cwd,filename);
 		
-	FILE *file = fopen("cells","r");
+	FILE *file = fopen("cells5","r");
 	if (file == NULL){
 		printf("Error: failed to open file \n");
 		return 1;

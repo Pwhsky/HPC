@@ -1,15 +1,15 @@
 CC = gcc
-SRC = newton.c
-OUTPUT = main
-OPT = -O2
+OPT = -O3 -lpthread -march=native
 LIBS = -lm
 
-.PHONY: all
+OUTPUT = newton 
 
-cell_distances: $(OBJ)
-	$(CC) $(SRC) -o $(OUTPUT) -fopenmp $(OPT) $(LIBS) -march=native
+
+$(OUTPUT): newton.c
+	$(CC) $< -o $@ $(OPT) $(LIBS)
 	
 
+.PHONY: clean
 clean:
-	rm -f $(OBJ) && rm -f $(OUTPUT)
+	rm -f $(OUTPUT)
 
