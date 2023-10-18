@@ -134,7 +134,7 @@ int main(int argc, char* argv[]){
 		if (nThreads > 1) {
 			// messaging from rank 0 to rank n
 			if (mpi_rank == 0) {
-				// send the curren rank last line to the right rank
+				// send the current rank last line to the right rank
 					double* sendind = currentValues + (loclen) * (height2);
 					MPI_Send(sendind, height2, MPI_DOUBLE, 1, 0, mpiworld);
 				// receive right rank top line to the current rank bottom - 1
@@ -144,17 +144,17 @@ int main(int argc, char* argv[]){
 				// receive left rank last line to the current rank top - 1
 					double* recvind = currentValues;
 					MPI_Recv(recvind, height2, MPI_DOUBLE, mpi_rank - 1, 0, mpiworld, &recvsta);
-				// send the curren rank top line to the left rank
+				// send the current rank top line to the left rank
 					double* sendind = currentValues + (height2);
 					MPI_Send(sendind, height2, MPI_DOUBLE, mpi_rank - 1, 0, mpiworld);
 			} else {
 				// receive left rank last line to the current rank top - 1
 					double* recvindl2r = currentValues;
 					MPI_Recv(recvindl2r, height2, MPI_DOUBLE, mpi_rank - 1, 0, mpiworld, &recvsta);
-				// send the curren rank last line to the right rank
+				// send the current rank last line to the right rank
 					double* sendindl2r = currentValues + loclen * (height2);
 					MPI_Send(sendindl2r, height2, MPI_DOUBLE, mpi_rank + 1, 0, mpiworld);
-				// send the curren rank top line to the right rank
+				// send the current rank top line to the right rank
 					double* sendindr2l = currentValues + (height2);
 					MPI_Send(sendindr2l, height2, MPI_DOUBLE, mpi_rank - 1, 0, mpiworld);
 				// receive right rank top line to the current rank bottom - 1
